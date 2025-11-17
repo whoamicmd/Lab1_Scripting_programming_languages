@@ -1,0 +1,43 @@
+{
+  "subplots": [
+    {
+      "title": "Voltage Channels",
+      "y_label": "Voltage [V]",
+      "channels": ["CH1", "CH2", "CH3", "CH4"]
+    },
+    {
+      "title": "Current Channels",
+      "y_label": "Current [A]",
+      "channels": ["CH5", "CH6", "CH7", "CH8"]
+    },
+    {
+      "title": "Temperature Sensors",
+      "y_label": "Temperature [°C]",
+      "channels": ["CH9", "CH10", "CH11", "CH12"]
+    },
+    {
+      "title": "Misc Data",
+      "y_label": "Value",
+      "channels": ["CH13", "CH14", "CH15", "CH16"]
+    }
+  ],
+  "channels": {
+    "CH1": { "name": "Vbus", "scale": 1.0, "unit": "V", "subplot": 0 },
+    "CH2": { "name": "Vout", "scale": 1.0, "unit": "V", "subplot": 0 },
+    "CH3": { "name": "Vin", "scale": 1.0, "unit": "V", "subplot": 0 },
+    "CH4": { "name": "Vref", "scale": 0.5, "unit": "V", "subplot": 0 },
+    "CH5": { "name": "Iout", "scale": 0.01, "unit": "A", "subplot": 1 },
+    "CH6": { "name": "Iin", "scale": 0.01, "unit": "A", "subplot": 1 },
+    "CH7": { "name": "Ishunt1", "scale": 0.02, "unit": "A", "subplot": 1 },
+    "CH8": { "name": "Ishunt2", "scale": 0.02, "unit": "A", "subplot": 1 },
+    "CH9": { "name": "Temp MOSFET", "scale": 1.0, "unit": "°C", "subplot": 2 },
+    "CH10": { "name": "Temp Board", "scale": 1.0, "unit": "°C", "subplot": 2 },
+    "CH11": { "name": "Temp Ambient", "scale": 1.0, "unit": "°C", "subplot": 2 },
+    "CH12": { "name": "Temp Extra", "scale": 1.0, "unit": "°C", "subplot": 2 },
+    "CH13": { "name": "RPM", "scale": 1.0, "unit": "rpm", "subplot": 3 },
+    "CH14": { "name": "PWM Duty", "scale": 0.1, "unit": "%", "subplot": 3 },
+    "CH15": { "name": "Error Flag", "scale": 1.0, "unit": "", "subplot": 3 },
+    "CH16": { "name": "Debug", "scale": 1.0, "unit": "", "subplot": 3 }
+  }
+}
+
