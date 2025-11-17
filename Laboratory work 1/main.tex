@@ -1,0 +1,169 @@
+\documentclass[14pt]{extarticle}
+
+% Налаштування шрифтів (вимагає компілятора XeLaTeX)
+\usepackage{fontspec}
+\setmainfont{Times New Roman} % Основний шрифт документу
+
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0pt}
+\usepackage{setspace}
+
+\usepackage{titlesec}
+\usepackage{indentfirst}
+
+\usepackage{enumitem}
+% Налаштування списків
+\setlist{topsep=0pt, partopsep=0pt, parsep=0pt, itemsep=0pt}
+
+% Налаштування мови
+% ПОВИНЕН бути завантажений ПІСЛЯ fontspec
+\usepackage[ukrainian]{babel}
+
+% Розмір сторінки та поля
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=2.5cm,right=1cm,marginparwidth=1.75cm, headsep=1.25cm, footskip=1.25cm]{geometry}
+
+% Корисні пакети
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+% Команда для форматування \section* (ненумерованої секції)
+\titleformat{name=\section, numberless} % Ціль: \section*
+  {\normalfont\normalsize\bfseries}     % Формат (звичайний, 14pt, жирний)
+  {}                                    % Немає "мітки" (номера)
+  {0em}                                 % Без відступу між міткою і текстом
+  {}                                    % ВІДСТУП
+
+% Параметри для нумерованих секцій
+\titleformat{\section}
+  {\normalfont\normalsize\bfseries}   % Формат
+  {\thesection}                       % Мітка (номер + крапка)
+  {0.4em}                                % Відступ між міткою і текстом
+  {}
+  
+% Команда для форматування \section (нумерованої секції)
+\titlespacing{\section}{1.25cm}{12pt}{12pt}
+                                  
+\title{ Лабораторна робота №1}
+\author{ Жук Дмитро РА-241}
+
+\begin{document}
+\onehalfspacing
+\maketitle
+
+\textbf{Тема:} Основи Python – змінні, введення-виведення, типи даних, базові обчислення.
+
+\textbf{Мета:} Ознайомитися із середовищем Jupyter Notebook. Навчитися працювати зі змінними та базовими типами даних. Використовувати print(), input(), type(). Виконувати прості арифметичні операції.
+
+\section*{Хід роботи}
+
+Згідно комплексу лабораторних робіт буде роглянуто роботу програми "UART Data Visualizer".
+
+У програмі використовується велика кількість змінних для зберігання станів, конфігурацій та даних.
+
+\vspace{0.5em}
+\section{Глобальні змінні (константи)}
+\begin{itemize}
+    \item \texttt{FRAME\_SIZE}: Зберігає очікуваний розмір одного кадру даних (пакету байтів).
+    \item \texttt{TERMINATOR}: Зберігає спеціальну послідовність байтів, яка означає кінець кадру.
+    \item \texttt{UART\_AVAILABLE}: Змінна-прапор (flag), яка показує, чи вдалося імпортувати бібліотеку \texttt{serial}.
+\end{itemize}
+
+\textbf{Змінні-атрибути (у класах):} Це змінні, що належать конкретному об'єкту (наприклад, \texttt{self.port}).
+\begin{itemize}
+    \item \texttt{self.running}: Зберігає стан потоку (чи він повинен працювати).
+    \item \texttt{self.dummy}: Зберігає вибір режиму (чи генерувати випадкові дані).
+    \item \texttt{self.port}, \texttt{self.baudrate}: Зберігають налаштування COM-порту.
+    \item \texttt{self.ser}: Зберігає об'єкт для роботи з COM-портом.
+    \item \texttt{self.root}: Зберігає головне вікно програми (GUI).
+    \item \texttt{self.config\_data}: Зберігає дані, завантажені з конфігураційного JSON-файлу.
+    \item \texttt{self.lines}, \texttt{self.subplots}: Зберігають об'єкти графіків для їх оновлення.
+    \item \texttt{self.data}: Зберігає масив (історію) отриманих числових даних.
+\end{itemize}
+
+\textbf{Локальні змінні (у функціях):}
+\begin{itemize}
+    \item \texttt{buffer}: Тимчасово накопичує байти, прочитані з порту.
+    \item \texttt{dummy\_floats}: Тимчасовий список для згенерованих випадкових чисел.
+    \item \texttt{path}: Зберігає шлях до файлу, який вибрав користувач.
+    \item \texttt{f}: Об'єкт відкритoго файлу для читання.
+    \item \texttt{baud}: Зберігає швидкість (baudrate), яку ввів користувач, після перетворення у число.
+\end{itemize}
+
+% --- РОЗДІЛ: ТИПИ ДАНИХ ---
+\section{Типи Даних}
+
+\textbf{Числові (\texttt{int} та \texttt{float}):}
+\begin{itemize}
+    \item \textbf{\texttt{int}} (ціле число) використовується для лічильників, індексів та налаштувань (наприклад, \texttt{baudrate = 115200}, \texttt{self.history\_length = 200}).
+    \item \textbf{\texttt{float}} (число з плаваючою комою) використовується для значень, що можуть бути нецілими, наприклад, час затримки (\texttt{time.sleep(0.1)}) або коефіцієнти масштабування (\texttt{cfg.get("scale", 1.0)}).
+\end{itemize}
+
+\textbf{Логічний (\texttt{bool}):}
+\begin{itemize}
+    \item Тип \textbf{\texttt{bool}} (значення \texttt{True} або \texttt{False}) використовується для керування станом програми. Наприклад, \texttt{self.running = True} або \texttt{self.dummy = dummy or not UART\_AVAILABLE}.
+\end{itemize}
+
+\textbf{Послідовності:}
+\begin{itemize}
+    \item \textbf{\texttt{str}} (рядок): Для будь-якої текстової інформації — заголовки вікон ("UART Data Visualizer"), мітки, повідомлення про помилки.
+    \item \textbf{\texttt{bytes}} (байтовий рядок): Критично важливий тип для роботи з "сирими" даними, що надходять з COM-порту. Наприклад, \texttt{TERMINATOR = b'\textbackslash xAA\textbackslash xBB'} та \texttt{buffer = b''}.
+    \item \textbf{\texttt{list}} (список): Динамічний масив для зберігання об'єктів, наприклад, \texttt{self.lines = []} (список ліній графіка) або \texttt{ports = []} (список доступних портів).
+    \item \textbf{\texttt{tuple}} (кортеж): Незмінний список. Використовується для групування пов'язаних даних, наприклад \texttt{(line, ch, ch\_idx)}.
+\end{itemize}
+
+\textbf{Словники (\texttt{dict}):}
+\begin{itemize}
+    \item Тип \textbf{\texttt{dict}} є ключовим для зберігання конфігурації. Він дозволяє зберігати дані у форматі "ключ: значення" (наприклад, \texttt{self.config\_data = json.load(f)}).
+\end{itemize}
+
+\textbf{Інші типи:}
+\begin{itemize}
+    \item \textbf{\texttt{None}} (тип \texttt{NoneType}) використовується для ініціалізації змінних, які ще не мають значення (\texttt{self.config\_data = None}).
+    \item \textbf{\texttt{numpy.ndarray}} (масив \texttt{numpy}) використовується для ефективного зберігання та обробки числових масивів \texttt{self.data}.
+\end{itemize}
+
+\section{Введення-Виведення (Input/Output)}
+
+\textbf{Введення (Input):}
+\begin{itemize}
+    \item \textbf{Введення від користувача (GUI):} Користувач вводить дані через графічні елементи: \texttt{ttk.Combobox} (вибір порту), \texttt{ttk.Entry} (введення тексту швидкості), \texttt{ttk.Checkbutton} (вибір режиму) та \texttt{ttk.Button} (старт/стоп).
+    \item \textbf{Введення з файлу:} Програма відкриває діалогове вікно \texttt{filedialog.askopenfilename(...)} для вибору файлу, а потім зчитує (вводить) дані з нього за допомогою \texttt{with open(path, 'r') as f:}.
+    \item \textbf{Введення з пристрою (UART):} Основне джерело даних. Команда \texttt{data = self.ser.read(FRAME\_SIZE)} виконує низькорівневе читання (введення) байтів із зовнішнього пристрою.
+\end{itemize}
+
+\textbf{Виведення (Output):}
+\begin{itemize}
+    \item \textbf{Виведення на екран (GUI):} Основне виведення — це оновлення графіків (\texttt{self.canvas.draw()}). Також програма виводить інформацію у спливаючих вікнах (\texttt{messagebox.showinfo(...)} та \texttt{messagebox.showerror(...)}).
+    \item \textbf{Виведення у консоль:} Використовується для налагодження та інформування про критичні помилки, які не бачить користувач, наприклад, \texttt{print(f"UART open error: \{e\}")}.
+\end{itemize}
+
+\vspace{1em}
+
+\section{Базові Обчислення}
+
+\textbf{Арифметичні операції:}
+\begin{itemize}
+    \item Використовуються операції множення (\texttt{*}), додавання (\texttt{+}) та віднімання (\texttt{-}). Наприклад, \texttt{FRAME\_SIZE = 16 * 4 + 2} (обчислення розміру), \texttt{buffer += data} (додавання байтів до буфера), \texttt{scaled = self.data[ch\_idx] * cfg.get("scale", 1.0)} (масштабування даних для графіка).
+\end{itemize}
+
+\textbf{Операції порівняння:}
+\begin{itemize}
+    \item Використовуються для прийняття рішень в умовних операторах \texttt{if}. Наприклад: \texttt{if frame[-2:] == TERMINATOR:} (перевірка на рівність), \texttt{if len(buffer) >= FRAME\_SIZE:} (більше або дорівнює), \texttt{if subplot\_idx < 0:} (менше).
+\end{itemize}
+
+\textbf{Логічні операції:}
+\begin{itemize}
+    \item Оператори \texttt{and}, \texttt{or}, \texttt{not} використовуються для комбінування умов. Наприклад, \texttt{if self.reader and self.reader.running:} (перевіряє, що об'єкт існує \textbf{і} він активний) або \texttt{dummy or not UART\_AVAILABLE} (використовує \textbf{або} та \textbf{не}).
+\end{itemize}
+
+\textbf{Обчислення за допомогою функцій:}
+\begin{itemize}
+    \item Використовуються вбудовані функції, що виконують обчислення: \texttt{len()} (обчислення довжини послідовності), \texttt{int()} (обчислення цілого числа з рядка), \texttt{struct.unpack()} (складне обчислення для перетворення байтів у числа \texttt{float}).
+\end{itemize}
+
+\section*{Висновок}
+
+У ході лабораторної роботи досягнуто мети: ознайомлення з Jupyter Notebook, робота зі змінними, типами даних (int, float, bool, str, bytes, list тощо), функціями print(), input(), type() та базовими обчисленнями. Аналіз програми "UART Data Visualizer" продемонстрував застосування змінних для станів і даних, введення-виведення через GUI, файли та UART, а також арифметичні, порівняльні й логічні операції. Робота закріпила фундаментальні навички Python для подальших завдань.
+
+\end{document}
