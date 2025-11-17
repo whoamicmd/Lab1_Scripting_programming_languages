@@ -1,0 +1,254 @@
+\documentclass[14pt]{extarticle} % Клас документу зі шрифтом 14pt (стандартна article не підтримує 14pt)
+
+% Налаштування шрифтів (вимагає компілятора XeLaTeX)
+\usepackage{fontspec} % Дозволяє використовувати системні шрифти
+\setmainfont{Times New Roman} % Встановлюємо основний шрифт документа
+
+\setlength{\parindent}{1.25cm} % Розмір відступу абзацу
+\setlength{\parskip}{0pt}      % Відстань між абзацами (0 — немає додаткового проміжку)
+\usepackage{setspace} % Пакет для керування міжрядковим інтервалом
+
+\usepackage{titlesec} % Гнучкі налаштування заголовків
+\usepackage{indentfirst} % Робить відступ першого абзацу після заголовка
+
+\usepackage{enumitem} % Гнучкі налаштування списків
+\setlist{topsep=0pt, partopsep=0pt, parsep=0pt, itemsep=0pt} % Прибираємо зайві відступи в списках
+
+% Налаштування мови (має бути після fontspec)
+\usepackage[ukrainian]{babel} % Українська мова документа
+
+% Налаштування сторінки та полів
+\usepackage[
+    letterpaper,          % Формат сторінки (можна замінити на a4paper)
+    top=2cm,              % Верхнє поле
+    bottom=2cm,           % Нижнє поле
+    left=2.5cm,           % Ліве поле
+    right=1cm,            % Праве поле
+    marginparwidth=1.75cm,% Ширина поля для приміток
+    headsep=1.25cm,       % Відстань між верхнім колонтитулом і текстом
+    footskip=1.25cm       % Відстань між нижнім колонтитулом і текстом
+]{geometry}
+
+% --- ДОДАТКОВІ ПАКЕТИ ---
+\usepackage{amsmath}   % Розширені можливості для математичних формул
+\usepackage{graphicx}  % Для додавання зображень (\includegraphics)
+\usepackage{listings}  % Для форматування та вставки блоків коду
+\usepackage{xcolor}    % Дозволяє визначати та використовувати кольори
+\usepackage{enumitem}  % Гнучкі налаштування списків (itemize, enumerate)
+\usepackage[colorlinks=true, allcolors=blue]{hyperref} % Робить посилання (зміст, URL) клікабельними та синіми
+
+%Глобальні налаштування для блоків коду (пакет listings)
+\lstset{
+    language=Python,                 % Мова за замовчуванням
+    basicstyle=\ttfamily\small,      % Шрифт коду (моноширинний, малий)
+    keywordstyle=\color{blue}\bfseries, % Стиль ключових слів (синій, жирний)
+    stringstyle=\color{orange},      % Стиль рядків (помаранчевий)
+    commentstyle=\color{gray}\itshape, % Стиль коментарів у коді (сірий, курсив)
+    numbers=left,                    % Нумерація рядків зліва
+    numberstyle=\tiny\color{gray},   % Стиль номерів рядків (дуже малий, сірий)
+    stepnumber=1,                    % Нумерувати кожен рядок
+    numbersep=5pt,                   % Відстань від номера до коду
+    backgroundcolor=\color{black!5}, % Світло-сірий фон
+    showstringspaces=false,          % Не показувати спеціальні символи для пробілів у рядках
+    tabsize=4,                       % Розмір табуляції (4 пробіли)
+    captionpos=b                     % Позиція підпису (b = bottom, знизу)
+}
+
+% Команда для форматування \section* (ненумерованої секції)
+\titleformat{name=\section, numberless} % Ціль: \section*
+  {\normalfont\normalsize\bfseries}     % Формат (звичайний, 14pt, жирний)
+  {}                                    % Немає "мітки" (номера)
+  {0em}                                 % Без відступу між міткою і текстом
+  {}                                    % ВІДСТУП
+
+% Параметри для нумерованих секцій
+\titleformat{\section}
+  {\normalfont\normalsize\bfseries}   % Формат
+  {\thesection}                       % Мітка (номер + крапка)
+  {0.4em}                                % Відступ між міткою і текстом
+  {}
+  
+% Команда для форматування \section (нумерованої секції)
+\titlespacing{\section}{1.25cm}{12pt}{12pt}
+                                  
+\title{ Лабораторна робота №2}
+\author{Жук Дмитро РА-241}
+
+\begin{document}
+\onehalfspacing
+\maketitle
+
+\textbf{Тема:} Умовні оператори \texttt{(if/else)} та цикли \texttt{(for, while)} для автоматизації обчислень.
+
+\textbf{Мета:} Ознайомитися з принципами використання умовних операторів \texttt{if, elif, else} та циклів \texttt{for, while} для створення автоматизованих алгоритмів обчислення та прийняття рішень у програмах на Python.
+
+\section*{Хід роботи}
+
+Принципи використання умовних операторів \texttt{(if, elif, else)} і циклів \texttt{(for, while)}. У цій програмі вони допомагають автоматизувати процеси: приймати рішення на основі умов (наприклад, чи доступний \texttt{UART}, чи завантажена конфігурація), обробляти дані в циклі (наприклад, безперервно читати з порту) і обчислювати значення (наприклад, масштабувати дані для графіків). Це робить програму гнучкою — вона реагує на різні сценарії без ручного втручання.
+
+\section{Умовні оператори: if, elif, else}
+Програма перевіряє умови і виконує різні гілки коду залежно від них. Наприклад, if перевіряє, чи істина умова, \texttt{else} — що робити, якщо ні. \texttt{elif} тут не використовується (в коді його немає), але \texttt{if-else} часто комбінуються з \texttt{try-except} для обробки помилок.
+
+\textbf{Приклади:}
+\begin{itemize}
+    \item \textbf{Перевірка на dummy-режим у класі UARTReader (метод run):} Зберігає стан потоку (чи він повинен працювати). Тут \texttt{if-else} вирішує, чи запускати реальне читання з UART, чи симуляцію.
+\end{itemize}
+
+\begin{lstlisting}
+if self.dummy:
+    self._run_dummy()
+else:
+    try:
+        self.ser = serial.Serial(self.port, self.baudrate, timeout=1)
+        self._run_uart()
+    except Exception as e:
+        print(f"UART open error: {e}")
+        self.running = False
+\end{lstlisting}
+
+\begin{itemize}
+    \item \textbf{Обробка фреймів даних у \_run\_uart:} Тут \texttt{if} перевіряє, чи є дані і чи закінчується фрейм термінатором. Це рішення автоматизує розбір потоку байтів — програма сама відфільтровує валідні дані для обчислення.
+\end{itemize}
+
+\begin{lstlisting}
+if data:
+    buffer += data
+    while len(buffer) >= FRAME_SIZE:
+        frame, buffer = buffer[:FRAME_SIZE], buffer[FRAME_SIZE:]
+        if frame[-2:] == TERMINATOR:
+            floats = struct.unpack('<16f', frame[:64])
+            self.callback(floats)
+\end{lstlisting}
+
+Якщо дані прийшли \texttt{(if data)}, додаємо в буфер. Потім, якщо фрейм повний і має правильний кінець \texttt{(if frame[-2:] == TERMINATOR)}, розпаковуємо в \texttt{float} і викликаємо \texttt{callback}.
+
+\begin{itemize}
+    \item \textbf{Налаштування subplot у setup\_plots:} Тут \texttt{if-else} в тернарному виразі вирішує, яку конфігурацію взяти для \texttt{subplot}. Це автоматизує створення графіків — якщо конфіг не вказаний, використовується дефолтний.
+\end{itemize}
+
+\begin{lstlisting}
+subplot_cfg = subplots_cfg[i] if i < len(subplots_cfg) else {}
+\end{lstlisting}
+
+Якщо індекс i в межах конфігу, беремо його; інакше — порожній словник. 
+
+Потім:
+
+\begin{lstlisting}
+if subplot_idx < 0:
+    subplot_idx = 0
+if subplot_idx >= len(self.subplots):
+    subplot_idx = len(self.subplots) - 1
+\end{lstlisting}
+
+Це "захищає" індекс, щоб уникнути помилок — програма сама коригує значення для коректного обчислення позиції графіка.
+
+\begin{itemize}
+    \item \textbf{Перевірка портів у refresh\_ports:} \texttt{If-else} перевіряє доступність \texttt{UART} і заповнює список портів. Автоматизує інтерфейс: якщо \texttt{UART} немає, список порожній, і користувач не побачить помилок.
+\end{itemize}
+
+\begin{lstlisting}
+if UART_AVAILABLE:
+    ports = [p.device for p in serial.tools.list_ports.comports()]
+else:
+    ports = []
+\end{lstlisting}
+
+\begin{itemize}
+    \item \textbf{Обробка помилок у start\_reader:} \texttt{Try-except} (яке схоже на \texttt{if-else} для помилок) перевіряє \texttt{baud rate}. Якщо не число — показує помилку, автоматизуючи валідацію вводу.
+\end{itemize}
+
+\begin{lstlisting}
+try:
+    baud = int(self.baud_var.get())
+except ValueError:
+    messagebox.showerror("Error", "Invalid baud rate")
+    return
+\end{lstlisting}
+
+У цілому, умовні оператори роблять програму "розумною" — вона приймає рішення про режими роботи, обробляє помилки і фільтрує дані автоматично, без потреби в ручних перевірках.
+
+\section{Цикли: for і while}
+
+Цикли використовуються для повторюваних обчислень і обробки колекцій. \texttt{While} — для безкінечних процесів (поки умова True), \texttt{for} — для ітерації по списках чи діапазонах.
+
+\begin{itemize}
+    \item \textbf{While у \_run\_uart і \_run\_dummy:} Це основний цикл для читання даних. \texttt{While} автоматизує безперервне опитування порту або генерацію симуляції, обчислюючи нові значення в реальному часі.
+\end{itemize}
+
+\vspace{6em}
+
+\begin{lstlisting}
+while self.running:
+    data = self.ser.read(FRAME_SIZE)
+    if data:
+        buffer += data
+        while len(buffer) >= FRAME_SIZE:
+            frame, buffer = buffer[:FRAME_SIZE], buffer[FRAME_SIZE:]
+            if frame[-2:] == TERMINATOR:
+                floats = struct.unpack('<16f', frame[:64])
+                self.callback(floats)
+\end{lstlisting}
+
+Зовнішній \texttt{while} триває, поки \texttt{self.running True} (тобто потік активний). Вкладений \texttt{while} обробляє весь буфер, якщо накопичилося багато даних. У dummy-режимі:
+
+\begin{lstlisting}
+while self.running:
+    dummy_floats = [random.uniform(0, 10) for _ in range(16)]
+    self.callback(dummy_floats)
+    time.sleep(0.1)
+\end{lstlisting}
+
+Це генерує випадкові дані кожні 0.1 секунди — автоматизований алгоритм симуляції для тестування.
+
+\begin{itemize}
+    \item \textbf{For у setup\_plots:} \texttt{For} ітерує по діапазону для створення \texttt{subplot} і по каналам для налаштування ліній. Це автоматизує обчислення позицій і масштабів для графіків.
+\end{itemize}
+
+\begin{lstlisting}
+for i in range(n_subplots):
+    subplot_cfg = subplots_cfg[i] if i < len(subplots_cfg) else {}
+    ax = self.fig.add_subplot(n_subplots, 1, i+1)
+    ax.set_title(subplot_cfg.get("title", f"Plot {i+1}"))
+    ax.set_ylabel(subplot_cfg.get("y_label", ""))
+    self.subplots.append(ax)
+\end{lstlisting}
+
+Цикл створює стільки \texttt{subplot}, скільки потрібно. Потім:
+
+\begin{lstlisting}
+for ch_idx, ch_name in enumerate(self.channel_keys):
+    ch = channels_cfg[ch_name]
+    subplot_idx = ch.get("subplot", 0)
+    # ... (index checks)
+    ax = self.subplots[subplot_idx]
+    line, = ax.plot(np.zeros(self.history_length), label=f"{ch.get('name',
+    ch_name)} [{ch.get('unit','')}]")
+    self.lines.append((line, ch, ch_idx))
+    ax.legend(fontsize=6, ncol=4)
+\end{lstlisting}
+
+Enumerate дає індекс і ім'я каналу, for обходить всі канали і додає лінії на графіки — автоматично формує візуалізацію на основі конфігу.
+
+\begin{itemize}
+    \item \textbf{For у update\_plot:} \texttt{For} цикл оновлює дані на графіках. Автоматизує обчислення масштабування і перемальовування кожні 100 мс.
+\end{itemize}
+
+\begin{lstlisting}
+for item in self.lines:
+    line, cfg, ch_idx = item
+    scaled = self.data[ch_idx] * cfg.get("scale", 1.0)
+    line.set_ydata(scaled)
+for ax in self.subplots:
+    ax.relim()
+    ax.autoscale_view(scaley=True)
+\end{lstlisting}
+
+Перший for масштабує дані для кожної лінії (обчислення scaled), другий — налаштовує осі. Це робить графіки динамічними без ручного втручання.
+
+\section*{Висновок}
+
+Виконана лабораторна робота дозволила на практиці ознайомитися з використанням умовних операторів та циклів у програмуванні на Python. Застосування \\ \texttt{if/else} дало можливість автоматизувати прийняття рішень у програмі, забезпечити обробку помилок та контроль за коректністю даних без ручного втручання. Використання циклів \texttt{for} та \texttt{while} показало ефективність автоматизованої обробки повторюваних завдань та безперервного опитування даних, що дозволяє створювати динамічні алгоритми обчислень і відображення інформації на графіках.
+
+Під час виконання роботи я також опанував \LaTeX, зокрема освоїв використання середовищ \texttt{lstlisting} для форматованого вставлення коду та \texttt{itemize} для структурованого оформлення списків.
+\end{document}
