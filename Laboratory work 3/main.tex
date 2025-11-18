@@ -1,0 +1,295 @@
+\documentclass[14pt]{extarticle} % Клас документу зі шрифтом 14pt (стандартна article не підтримує 14pt)
+
+% Налаштування шрифтів (вимагає компілятора XeLaTeX)
+\usepackage{fontspec} % Дозволяє використовувати системні шрифти
+\setmainfont{Times New Roman} % Встановлюємо основний шрифт документа
+
+\setlength{\parindent}{1.25cm} % Розмір відступу абзацу
+\setlength{\parskip}{0pt}      % Відстань між абзацами (0 — немає додаткового проміжку)
+\usepackage{setspace} % Пакет для керування міжрядковим інтервалом
+
+\usepackage{titlesec} % Гнучкі налаштування заголовків
+\usepackage{indentfirst} % Робить відступ першого абзацу після заголовка
+
+\usepackage{enumitem} % Гнучкі налаштування списків
+\setlist{topsep=0pt, partopsep=0pt, parsep=0pt, itemsep=0pt} % Прибираємо зайві відступи в списках
+
+% Налаштування мови (має бути після fontspec)
+\usepackage[ukrainian]{babel} % Українська мова документа
+
+% Налаштування сторінки та полів
+\usepackage[
+    letterpaper,          % Формат сторінки (можна замінити на a4paper)
+    top=2cm,              % Верхнє поле
+    bottom=2cm,           % Нижнє поле
+    left=2.5cm,           % Ліве поле
+    right=1cm,            % Праве поле
+    marginparwidth=1.75cm,% Ширина поля для приміток
+    headsep=1.25cm,       % Відстань між верхнім колонтитулом і текстом
+    footskip=1.25cm       % Відстань між нижнім колонтитулом і текстом
+]{geometry}
+
+% --- ДОДАТКОВІ ПАКЕТИ ---
+\usepackage{amsmath}   % Розширені можливості для математичних формул
+\usepackage{graphicx}  % Для додавання зображень (\includegraphics)
+\usepackage{listings}  % Для форматування та вставки блоків коду
+\usepackage{xcolor}    % Дозволяє визначати та використовувати кольори
+\usepackage{enumitem}  % Гнучкі налаштування списків (itemize, enumerate)
+\usepackage[colorlinks=true, allcolors=blue]{hyperref} % Робить посилання (зміст, URL) клікабельними та синіми
+
+%Глобальні налаштування для блоків коду (пакет listings)
+\lstset{
+    language=Python,                 % Мова за замовчуванням
+    basicstyle=\ttfamily\small,      % Шрифт коду (моноширинний, малий)
+    keywordstyle=\color{blue}\bfseries, % Стиль ключових слів (синій, жирний)
+    stringstyle=\color{green!70!black},      % Стиль рядків (помаранчевий)
+    commentstyle=\color{gray}\itshape, % Стиль коментарів у коді (сірий, курсив)
+    numbers=left,                    % Нумерація рядків зліва
+    numberstyle=\tiny\color{gray},   % Стиль номерів рядків (дуже малий, сірий)
+    stepnumber=1,                    % Нумерувати кожен рядок
+    numbersep=5pt,                   % Відстань від номера до коду
+    backgroundcolor=\color{black!5}, % Світло-сірий фон
+    showstringspaces=false,          % Не показувати спеціальні символи для пробілів у рядках
+    tabsize=4,                       % Розмір табуляції (4 пробіли)
+    captionpos=b                     % Позиція підпису (b = bottom, знизу)
+}
+
+% Команда для форматування \section* (ненумерованої секції)
+\titleformat{name=\section, numberless} % Ціль: \section*
+  {\normalfont\normalsize\bfseries}     % Формат (звичайний, 14pt, жирний)
+  {}                                    % Немає "мітки" (номера)
+  {0em}                                 % Без відступу між міткою і текстом
+  {}                                    % ВІДСТУП
+
+% Параметри для нумерованих секцій
+\titleformat{\section}
+  {\normalfont\normalsize\bfseries}   % Формат
+  {\thesection}                       % Мітка (номер + крапка)
+  {0.4em}                                % Відступ між міткою і текстом
+  {}
+  
+% Команда для форматування \section (нумерованої секції)
+\titlespacing{\section}{1.25cm}{12pt}{12pt}
+                                  
+\title{ Лабораторна робота №3}
+\author{Жук Дмитро РА-241}
+
+\begin{document}
+\onehalfspacing
+\maketitle
+
+\textbf{Тема:} Списки, кортежі, робота з рядками, операції індексації та зрізів.
+
+\textbf{Мета:} Ознайомитися з методами створення, обробки та маніпуляції списками, кортежами й рядками в Python. Навчитися використовувати індексацію, зрізи, функції та методи для роботи з цими типами даних.
+
+\section*{Хід роботи}
+
+\section{Списки (Lists)}
+
+Списки — це змінювані послідовності, які можуть містити елементи будь-якого типу. Їх створюють за допомогою квадратних дужок [] або функцій типу \texttt{list()}. Обробка включає додавання \texttt{(append, extend)}, видалення \texttt{(pop, remove)}, сортування \texttt{(sort)} тощо. Маніпуляція — це зміна елементів на місці. Індексація: 
+\\ \texttt{list[index]} для доступу (індекси починаються з 0, негативні — з кінця). Зрізи: \texttt{list[start:end:step]} для витягнення підсписків.
+
+У програмі списки використовуються часто для зберігання даних, конфігурацій і елементів інтерфейсу. 
+
+\textbf{Наприклад:}
+
+\begin{itemize}
+    \item \textbf{Створення списків:} Порожні списки створюються просто як [], а заповнені — з елементами або через list comprehension (генератори списків).
+\end{itemize}
+
+\begin{lstlisting}
+self.lines = []
+self.subplots = []
+\end{lstlisting}
+
+Тут в \texttt{init} класу App створюються порожні списки для зберігання ліній графіків і \texttt{subplot}. Вони потім наповнюються в циклі.
+
+\vspace{2em}
+
+\textbf{Приклад створення через \texttt{list comprehension}}:
+
+\begin{lstlisting}
+dummy_floats = [random.uniform(0, 10) for _ in range(16)]
+\end{lstlisting}
+
+У методі \texttt{\_run\_dummy} класу \texttt{UARTReader} це створює список з 16 випадкових \texttt{float}. Функція random.uniform генерує числа, а \texttt{comprehension} — зручний спосіб заповнити список в один рядок.
+
+\textbf{Через \texttt{list():}}
+
+\begin{lstlisting}
+self.channel_keys = list(channels_cfg.keys())
+\end{lstlisting}
+
+\texttt{setup\_plots} перетворює ключі словника на список, щоб зберегти порядок каналів.
+
+\begin{itemize}
+    \item \textbf{Обробка та маніпуляція:} Додавання елементів через \texttt{append}, доступ і зміна через індексацію.
+\end{itemize}
+
+\begin{lstlisting}
+self.subplots.append(ax)
+\end{lstlisting}
+
+У циклі for в \texttt{setup\_plots} додається об'єкт ax \texttt{(subplot)} до списку. Це маніпуляція — список росте динамічно.
+
+\begin{lstlisting}
+self.lines.append((line, ch, ch_idx))
+\end{lstlisting}
+
+Тут додається кортеж до списку \texttt{lines}. Потім в \texttt{update\_plot} цей список \textbf{обробляється в циклі:}
+
+\begin{lstlisting}
+for item in self.lines:
+    line, cfg, ch_idx = item
+    scaled = self.data[ch_idx] * cfg.get("scale", 1.0)
+    line.set_ydata(scaled)
+\end{lstlisting}
+
+Ітерація по списку, розпаковка кортежу \texttt{(item — це (line, cfg, ch\_idx))}, обчислення \texttt{scaled} і оновлення даних лінії. Це показує, як списки використовуються для групування даних і їхньої обробки.
+
+\begin{itemize}
+    \item \textbf{Індексація та зрізи:} Доступ до елементів за індексом, зрізи для підчастин.
+\end{itemize}
+
+\begin{lstlisting}
+ax = self.subplots[subplot_idx]
+\end{lstlisting}
+
+У \texttt{setup\_plots:} \texttt{subplot\_idx} — індекс, беремо конкретний \texttt{subplot} зі списку. Якщо індекс виходить за межі, код раніше коригує його if-умовами.
+
+\begin{lstlisting}
+ports = [p.device for p in serial.tools.list_ports.comports()]
+\end{lstlisting}
+
+\vspace{4em}
+
+У \texttt{refresh\_ports:} створює список портів. \textbf{Потім:}
+
+\begin{lstlisting}
+if ports:
+    self.port_var.set(ports[0])
+\end{lstlisting}
+
+Індексація \texttt{ports[0]} — бере перший елемент, якщо список не порожній.Зрізів у списків тут менше, але приклад з numpy-масивом (який подібний до списку) в \texttt{on\_new\_data}:
+
+\begin{lstlisting}
+self.data[:, -1] = floats
+\end{lstlisting}
+
+Це індексація: всі рядки (:), останній стовпець (-1). Numpy-масив \texttt{self.data} створено як \texttt{np.zeros((16, self.history\_length))}, але принцип схожий на списки списків.
+
+\section{Кортежі (Tuples)}
+
+Кортежі — незмінні послідовності, створюються круглими дужками () або без них для розпаковки. Вони швидші за списки, корисні для фіксованих даних. Обробка: не можна змінювати, але можна ітерувати. Маніпуляція обмежена (немає append), але підтримують індексацію та зрізи як списки.
+
+\begin{itemize}
+    \item \textbf{Створення кортежів:} Прямо в дужках або через розпаковку.
+\end{itemize}
+
+\begin{lstlisting}
+self.lines.append((line, ch, ch_idx))
+\end{lstlisting}
+
+Тут створюється кортеж \texttt{(line, ch, ch\_idx)} і додається до списку. Кортежі зручні для "упаковки" кількох змінних разом.
+
+\begin{lstlisting}
+frame, buffer = buffer[:FRAME_SIZE], buffer[FRAME_SIZE:]
+\end{lstlisting}
+
+У \texttt{\_run\_uart:} це розпаковка кортежу з двох зрізів. Python автоматично створює кортеж з правої сторони і розпаковує в дві змінні.
+
+\begin{lstlisting}
+floats = struct.unpack('<16f', frame[:64])
+\end{lstlisting}
+
+Функція \texttt{unpack} повертає кортеж з 16 \texttt{float}. Це створення через функцію — типовий спосіб для фіксованих даних.
+
+\begin{itemize}
+    \item \textbf{Обробка та маніпуляція:} Оскільки незмінні, маніпуляція — це створення нових, але обробка через ітерацію чи розпаковку.
+\end{itemize}
+
+\begin{lstlisting}
+line, cfg, ch_idx = item
+\end{lstlisting}
+
+У \texttt{update\_plot: item} — це кортеж з \texttt{lines}, розпаковуємо в три змінні. Це зручна обробка — розбиваємо на частини для використання.
+
+\begin{lstlisting}
+self.fig, self.ax = plt.subplots(figsize=(8, 6))
+\end{lstlisting}
+
+У \texttt{init: subplots} повертає кортеж \texttt{(fig, ax)}, розпаковуємо одразу. Це автоматизує присвоєння кількох значень.
+
+\begin{itemize}
+    \item \textbf{Індексація та зрізи:} Як у списків, але без змін.
+\end{itemize}
+
+\begin{lstlisting}
+if frame[-2:] == TERMINATOR:
+\end{lstlisting}
+
+Тут \texttt{frame} — байтовий рядок \texttt{(bytes)}, але принцип той же: [-2:] — зріз останніх двох елементів (індексація з кінця). Порівнюємо з кортежем байтів \texttt{TERMINATOR = b'\textbackslash xAA\textbackslash xBB'}.
+
+У unpack: \texttt{floats[0]} міг би бути, але тут весь кортеж присвоюється \texttt{self.data[:, -1] = floats} — це присвоєння кортежу масиву.
+
+\section{Рядки (Strings)}
+
+Рядки — послідовності символів, створюються лапками \verb|""| або \verb|''|. Обробка: конкатенація (+), форматування \texttt{(f-strings)}. Маніпуляція: створення нових рядків методами \texttt{(upper, split)}. Індексація: \texttt{str[index]}, зрізи: \texttt{str[start:end]}.
+
+\begin{itemize}
+    \item \textbf{Створення рядків:} Прямо в лапках, або через форматування.
+\end{itemize}
+
+Простий рядок для заголовка вікна. \texttt{f-string} для форматування:
+
+\begin{lstlisting}
+label=f"{ch.get('name', ch_name)} [{ch.get('unit','')}]"
+\end{lstlisting}
+
+\texttt{setup\_plots:} вставляє значення з словника в рядок. Це створення динамічного рядка з змінними.
+
+\begin{lstlisting}
+print(f"UART open error: {e}")
+\end{lstlisting}
+
+\texttt{run: f-string} для логування помилки з змінною \texttt{e}.
+
+\begin{itemize}
+    \item \textbf{Обробка та маніпуляція:} Методи типу \texttt{get} для словників, але для рядків — конкатенація, \texttt{format}.
+\end{itemize}
+
+\begin{lstlisting}
+buffer += data
+\end{lstlisting}
+
+\texttt{\_run\_uart: buffer — bytes} (схожий на рядок), \texttt{+=} додає нові дані. Для \texttt{str} це створює новий рядок (бо незмінні).
+
+\begin{lstlisting}
+path = filedialog.askopenfilename(filetypes=[("JSON Files", "*.json")])
+\end{lstlisting}
+
+\texttt{load\_config: filetypes} — список кортежів, але \texttt{"*.json"} — рядок для фільтра.
+
+\begin{itemize}
+    \item \textbf{Індексація та зрізи:} Для доступу до частин.
+\end{itemize}
+
+\begin{lstlisting}
+frame[:64]
+\end{lstlisting}
+
+Зріз перших 64 байтів для unpack. \texttt{frame[-2:]} — останні два, як вище.
+
+\begin{lstlisting}
+self.ax.text(0.5, 0.5, "Load config to start", ha='center', va='center')
+\end{lstlisting}
+
+\texttt{"Load config to start"} — рядок, але індексація не використовується; зрізи могли б бути для підрядків, наприклад, якщо б треба було витягти частину.
+
+\section*{Висновок}
+
+У ході виконання лабораторної роботи №3 розглянуто основні послідовні типи даних мови Python: списки, кортежі та рядки.
+
+Звіт оформлено в \LaTeX \ з використанням класу \texttt{extarticle (14 pt)} та компілятора \texttt{XeLaTeX}. Це забезпечило професійну українську типографіку, чітке відображення коду з підсвіткою синтаксису (пакет listings), коректні відступи, клікабельні посилання та загалом значно вищий рівень презентації матеріалу порівняно зі звітами у текстових редакторах.
+
+\end{document}
