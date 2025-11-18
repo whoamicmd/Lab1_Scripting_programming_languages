@@ -1,0 +1,331 @@
+\documentclass[14pt]{extarticle} % Клас документу зі шрифтом 14pt (стандартна article не підтримує 14pt)
+
+% Налаштування шрифтів (вимагає компілятора XeLaTeX)
+\usepackage{fontspec} % Дозволяє використовувати системні шрифти
+\setmainfont{Times New Roman} % Встановлюємо основний шрифт документа
+
+\setlength{\parindent}{1.25cm} % Розмір відступу абзацу
+\setlength{\parskip}{0pt}      % Відстань між абзацами (0 — немає додаткового проміжку)
+\usepackage{setspace} % Пакет для керування міжрядковим інтервалом
+
+\usepackage{titlesec} % Гнучкі налаштування заголовків
+\usepackage{indentfirst} % Робить відступ першого абзацу після заголовка
+
+\usepackage{enumitem} % Гнучкі налаштування списків
+\setlist{topsep=0pt, partopsep=0pt, parsep=0pt, itemsep=0pt} % Прибираємо зайві відступи в списках
+
+% Налаштування мови (має бути після fontspec)
+\usepackage[ukrainian]{babel} % Українська мова документа
+
+% Налаштування сторінки та полів
+\usepackage[
+    letterpaper,          % Формат сторінки (можна замінити на a4paper)
+    top=2cm,              % Верхнє поле
+    bottom=2cm,           % Нижнє поле
+    left=2.5cm,           % Ліве поле
+    right=1cm,            % Праве поле
+    marginparwidth=1.75cm,% Ширина поля для приміток
+    headsep=1.25cm,       % Відстань між верхнім колонтитулом і текстом
+    footskip=1.25cm       % Відстань між нижнім колонтитулом і текстом
+]{geometry}
+
+% --- ДОДАТКОВІ ПАКЕТИ ---
+\usepackage{tcolorbox}
+\usepackage{amsmath}   % Розширені можливості для математичних формул
+\usepackage{graphicx}  % Для додавання зображень (\includegraphics)
+\usepackage{listings}  % Для форматування та вставки блоків коду
+\usepackage{xcolor}    % Дозволяє визначати та використовувати кольори
+\usepackage{enumitem}  % Гнучкі налаштування списків (itemize, enumerate)
+\usepackage[colorlinks=true, allcolors=blue]{hyperref} % Робить посилання (зміст, URL) клікабельними та синіми
+
+%Глобальні налаштування для блоків коду (пакет listings)
+\lstset{
+    language=Python,                 % Мова за замовчуванням
+    basicstyle=\ttfamily\small,      % Шрифт коду (моноширинний, малий)
+    keywordstyle=\color{blue}\bfseries, % Стиль ключових слів (синій, жирний)
+    stringstyle=\color{green!70!black},      % Стиль рядків (помаранчевий)
+    commentstyle=\color{gray}\itshape, % Стиль коментарів у коді (сірий, курсив)
+    numbers=left,                    % Нумерація рядків зліва
+    numberstyle=\tiny\color{gray},   % Стиль номерів рядків (дуже малий, сірий)
+    stepnumber=1,                    % Нумерувати кожен рядок
+    numbersep=5pt,                   % Відстань від номера до коду
+    backgroundcolor=\color{black!5}, % Світло-сірий фон
+    showstringspaces=false,          % Не показувати спеціальні символи для пробілів у рядках
+    tabsize=4,                       % Розмір табуляції (4 пробіли)
+    captionpos=b                     % Позиція підпису (b = bottom, знизу)
+}
+
+% Визначаємо кольори, схожі на ваш скріншот
+\definecolor{codeText}{HTML}{CC7832}  % Оранжевий текст
+\definecolor{softBg}{HTML}{F5F5F5}    % Світло-сірий фон
+
+% Створюємо команду \code
+\newtcbox{\code}{on line, 
+  boxrule=0pt,       % Без рамки
+  colback=softBg,  % Колір фону
+  coltext=codeText,  % Колір тексту
+  arc=2pt,           % Радіус закруглення кутів
+  boxsep=0pt,        % Відступ від рамки (зовнішній)
+  left=3pt, right=3pt, top=2pt, bottom=2pt, % Внутрішні відступи
+  fontupper=\ttfamily % Моноширинний шрифт
+}
+
+% Команда для форматування \section* (ненумерованої секції)
+\titleformat{name=\section, numberless} % Ціль: \section*
+  {\normalfont\normalsize\bfseries}     % Формат (звичайний, 14pt, жирний)
+  {}                                    % Немає "мітки" (номера)
+  {0em}                                 % Без відступу між міткою і текстом
+  {}                                    % ВІДСТУП
+
+% Параметри для нумерованих секцій
+\titleformat{\section}
+  {\normalfont\normalsize\bfseries}   % Формат
+  {\thesection}                       % Мітка (номер + крапка)
+  {0.4em}                                % Відступ між міткою і текстом
+  {}
+  
+% Команда для форматування \section (нумерованої секції)
+\titlespacing{\section}{1.25cm}{12pt}{12pt}
+                                  
+\title{ Лабораторна робота №4}
+\author{Жук Дмитро РА-241}
+
+\begin{document}
+\onehalfspacing
+\maketitle
+
+\textbf{Тема:} Списки, кортежі, робота з рядками, операції індексації та зрізів.
+
+\textbf{Мета:} Ознайомитися з методами створення, обробки та маніпуляції списками, кортежами й рядками в Python. Навчитися використовувати індексацію, зрізи, функції та методи для роботи з цими типами даних.
+
+\section*{Хід роботи}
+
+\section{Імпорт (Imports)}
+
+Імпорт в Python — це спосіб підключити зовнішні модулі або бібліотеки, щоб не писати все з нуля. Використовується ключове слово \code{import}, або \texttt{from module} \code{import something} для конкретних частин. Це сприяє повторному використанню: ти береш готові інструменти від спільноти. У цій програмі імпорти розділені на групи — базові, \texttt{Tkinter, numpy/matplotlib} і \texttt{serial} (з \texttt{try-except} для обробки помилок імпорту). Це робить код адаптивним: якщо serial не доступний, програма переходить на dummy-режим.
+
+Основний фрагмент імпортів:
+
+\begin{lstlisting}
+import struct
+import threading
+import time
+import random
+import json
+import tkinter as tk
+from tkinter import ttk, messagebox, filedialog
+
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
+try:
+    import serial
+    import serial.tools.list_ports
+    UART_AVAILABLE = True
+except ImportError:
+    UART_AVAILABLE = False
+\end{lstlisting}
+
+\begin{itemize}
+    \item \code{import struct} — для розпаковки байтів у float (використовується в unpack).
+    \item \code{import threading} — для створення потоків (клас \texttt{UARTReader} успадковує \texttt{threading.Thread}).
+    \item \code{import tkinter as tk} і \code{from tkinter import ...} — імпорт GUI-елементів. \code{as tk} — аліас для зручності, щоб не писати повне ім'я кожного разу.
+    \item \code{import numpy as np} — для масивів даних \texttt{(self.data = np.zeros(...))}.
+    \item \texttt{Try-except} навколо \code{import serial} : якщо бібліотека не встановлена, встановлюється флаг \texttt{UART\_AVAILABLE = False}, і програма не падає, а йде в симуляцію. Це розумний спосіб імпорту для крослатформовості.
+\end{itemize}
+
+\section{Функції (Functions)}
+
+Функції в Python — це блоки коду, які виконують конкретне завдання, визначаються через \code{def name(args):}. Вони приймають аргументи, повертають значення \texttt{(return)} і можуть мати дефолтні значення. У цій програмі функції — це методи класів (бо код об'єктно-орієнтований), але є й глобальні (як \texttt{if name == "main"}). Вони автоматизують повторювані дії, наприклад, читання даних чи оновлення графіка.
+
+\textbf{Функції (методи):}
+
+\begin{itemize}
+    \item \textbf{Метод init у класі UARTReader:} Це конструктор, ініціалізує об'єкт. Приймає callback, port тощо, з дефолтними значеннями (baudrate=115200).
+\end{itemize}
+
+\begin{lstlisting}
+def __init__(self, callback, port=None, baudrate=115200, dummy=False):
+    super().__init__(daemon=True)
+    self.callback = callback
+    self.dummy = dummy or not UART_AVAILABLE
+    self.running = False
+    self.port = port
+    self.baudrate = baudrate
+    self.ser = None
+\end{lstlisting}
+
+Ця функція встановлює стан потоку. \code{super().\_init\_} — викликає конструктор батьківського класу \texttt{threading.Thread}. Це приклад спадкування для повторного використання.
+
+\begin{itemize}
+    \item \textbf{Метод run у UARTReader:} Перевизначений метод з \texttt{Thread}, запускає логіку потоку. Використовує \texttt{if} для вибору режиму.
+\end{itemize}
+
+\begin{lstlisting}
+def run(self):
+    self.running = True
+    if self.dummy:
+        self._run_dummy()
+    else:
+        try:
+            self.ser = serial.Serial(self.port, self.baudrate, timeout=1)
+            self._run_uart()
+        except Exception as e:
+            print(f"UART open error: {e}")
+            self.running = False
+\end{lstlisting}
+
+Функція не повертає нічого \texttt{(None)}, але запускає приватні методи \texttt{(\_run\_dummy, \_run\_uart)}. Приватні методи (з \_) — конвенція для "внутрішнього" використання.
+
+\begin{itemize}
+    \item \textbf{Метод \texttt{on\_new\_data} у класі App:} Callback-функція, яка обробляє нові дані.
+\end{itemize}
+
+\begin{lstlisting}
+def on_new_data(self, floats):
+    self.data = np.roll(self.data, -1, axis=1)
+    self.data[:, -1] = floats
+\end{lstlisting}
+
+Приймає список \texttt{floats}, маніпулює numpy-масивом texttt{self.data} (зсув і присвоєння). Це проста функція для оновлення даних, викликається з потоку.
+
+\begin{itemize}
+    \item \textbf{Метод \texttt{update\_plot} у App:} Рекурсивно планує себе через \texttt{after} для анімації.
+\end{itemize}
+
+\begin{lstlisting}
+def update_plot(self):
+    if getattr(self, "_closing", False):
+        return
+    if self.config_data and self.lines:
+        for item in self.lines:
+            line, cfg, ch_idx = item
+            scaled = self.data[ch_idx] * cfg.get("scale", 1.0)
+            line.set_ydata(scaled)
+        for ax in self.subplots:
+            ax.relim()
+            ax.autoscale_view(scaley=True)
+        try:
+            self.canvas.draw()
+        except tk.TclError:
+            return
+    try:
+        self._after_id = self.root.after(100, self.update_plot)
+    except tk.TclError:
+        self._after_id = None
+\end{lstlisting}
+
+Це ключова функція для візуалізації: оновлює лінії, масштабує, перемальовує. Використовує \texttt{try-except} для обробки помилок \texttt{Tkinter}.
+
+\section{Модульність коду (Modularity)}
+
+Модульність — це розбиття коду на незалежні модулі (класи, функції, файли), щоб кожна частина робила свою справу і легко замінювалася. У Python це досягається класами, методами і імпортами. Ця програма модульна: логіка читання даних в окремому класі \texttt{(UARTReader)}, \texttt{GUI} і візуалізація — в \texttt{App}.
+
+\begin{itemize}
+    \item \textbf{Клас \texttt{UARTReader:}} Окремий модуль для читання даних, успадковує Thread. Містить методи run, \texttt{\_run\_uart, \_run\_dummy, stop}. Це ізолює багатопотоковість від \texttt{GUI}.
+\end{itemize}
+
+\begin{lstlisting}
+class UARTReader(threading.Thread):
+    # ... (all methods inside)
+\end{lstlisting}
+
+Клас — як модуль: створюєш об'єкт, запускаєш, зупиняєш. Модульність: dummy режим відділений від реального \texttt{UART}.
+
+\begin{itemize}
+    \item \textbf{Клас \texttt{App}:} Головний модуль для \texttt{GUI}. Містить \texttt{init} для налаштування інтерфейсу, методи для завантаження конфігу, старту/стопу, оновлення.
+\end{itemize}
+
+\begin{lstlisting}
+class App:
+    def __init__(self, root):
+        # ... menu settings, controls, placeholder graphics
+    # other methods: load_config, setup_plots, refresh_ports, etc.
+\end{lstlisting}
+
+\texttt{init} будує інтерфейс (меню, кнопки, canvas). Інші методи — як підмодулі: \texttt{setup\_plots} очищує і налаштовує графіки, \texttt{on\_close} чисто закриває програму.
+
+\begin{itemize}
+    \item \textbf{Глобальний блок if \texttt{name == "main"}:} Це модульність для запуску як скрипту, але дозволяє імпортувати клас App в інший файл без запуску.
+\end{itemize}
+
+\begin{lstlisting}
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = App(root)
+    root.protocol("WM_DELETE_WINDOW", app.on_close)
+    root.mainloop()
+\end{lstlisting}
+
+Це стандартний патерн: програма запускається тільки якщо файл виконується безпосередньо.
+
+\section{Повторне використання коду (Code Reuse)}
+
+Повторне використання — це уникнення дублювання через функції, класи, імпорти і спадкування. У Python це ООП (спадкування), імпорти бібліотек і виклики методів. Тут багато прикладів: готові бібліотеки \texttt{(serial, matplotlib)}, спадкування \texttt{(Thread)}, виклики методів у циклах.
+
+\begin{itemize}
+    \item \textbf{Спадкування від \texttt{threading.Thread}:} \texttt{UARTReader} повторно використовує логіку потоків з стандартної бібліотеки.
+\end{itemize}
+
+\begin{lstlisting}
+class UARTReader(threading.Thread):
+    def __init__(self, ...):
+        super().__init__(daemon=True)
+    def run(self):  # redefinition
+        ...
+\end{lstlisting}
+
+Замість писати свій потік, беремо готовий і додаємо свою логіку.
+
+\begin{itemize}
+    \item \textbf{Виклик \texttt{callback} у циклі:} У \texttt{\_run\_uart} і \texttt{\_run\_dummy} повторно використовується \texttt{self.callback} для обробки даних.
+\end{itemize}
+
+\begin{lstlisting}
+# in _run_uart
+if frame[-2:] == TERMINATOR:
+    floats = struct.unpack('<16f', frame[:64])
+    self.callback(floats)
+\end{lstlisting}
+
+\begin{lstlisting}
+# in _run_dummy
+dummy_floats = [random.uniform(0, 10) for _ in range(16)]
+self.callback(dummy_floats)
+\end{lstlisting}
+
+Один і той же \texttt{callback} \texttt{(on\_new\_data)} використовується в обох режимах — немає дублювання обробки.
+
+\begin{itemize}
+    \item \textbf{Цикли для налаштування в \texttt{setup\_plots}:} Повторне використання коду в \texttt{for} для \texttt{subplot} і каналів.
+\end{itemize}
+
+\begin{lstlisting}
+for i in range(n_subplots):
+    subplot_cfg = subplots_cfg[i] if i < len(subplots_cfg) else {}
+    ax = self.fig.add_subplot(n_subplots, 1, i+1)
+    # ... settings
+    self.subplots.append(ax)
+\end{lstlisting}
+
+\begin{lstlisting}
+for ch_idx, ch_name in enumerate(self.channel_keys):
+    # ... налаштування лінії
+    self.lines.append((line, ch, ch_idx))
+\end{lstlisting}
+
+Замість писати код для кожного \texttt{subplot}/каналу окремо, цикл повторно використовує логіку для всіх.
+
+\begin{itemize}
+    \item \textbf{Імпорти для повторного використання:} \texttt{Numpy} для масивів \texttt{(np.roll, \\ np.zeros)}, \texttt{Matplotlib} для графіків \texttt{(ax.plot, fig.tight\_layout)} — все готове, не пишемо з нуля.
+\end{itemize}
+
+\section*{Висновок}
+
+У лабораторній роботі №4 розглянуто організацію Python-програми: імпорт модулів з обробкою винятків, використання функцій і методів класів, принципи модульності (окремі класи UARTReader та App) та повторне використання коду (спадкування, callback, цикли, готові бібліотеки).
+Програма демонструє стійку багатопоточну візуалізацію даних з UART або в симуляційному режимі. 
+
+Звіт оформлено в \LaTeX \ \texttt{(extarticle 14 pt, XeLaTeX, listings, tcolorbox)}, що забезпечило професійний вигляд документу.
+
+\end{document}
