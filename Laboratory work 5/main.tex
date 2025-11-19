@@ -1,0 +1,295 @@
+\documentclass[14pt]{extarticle} % Клас документу зі шрифтом 14pt (стандартна article не підтримує 14pt)
+
+% Налаштування шрифтів (вимагає компілятора XeLaTeX)
+\usepackage{fontspec} % Дозволяє використовувати системні шрифти
+\setmainfont{Times New Roman} % Встановлюємо основний шрифт документа
+
+\setlength{\parindent}{1.25cm} % Розмір відступу абзацу
+\setlength{\parskip}{0pt}      % Відстань між абзацами (0 — немає додаткового проміжку)
+\usepackage{setspace} % Пакет для керування міжрядковим інтервалом
+
+\usepackage{titlesec} % Гнучкі налаштування заголовків
+\usepackage{indentfirst} % Робить відступ першого абзацу після заголовка
+
+\usepackage{enumitem} % Гнучкі налаштування списків
+\setlist{topsep=0pt, partopsep=0pt, parsep=0pt, itemsep=0pt} % Прибираємо зайві відступи в списках
+
+% Налаштування мови (має бути після fontspec)
+\usepackage[ukrainian]{babel} % Українська мова документа
+
+% Налаштування сторінки та полів
+\usepackage[
+    letterpaper,          % Формат сторінки (можна замінити на a4paper)
+    top=2cm,              % Верхнє поле
+    bottom=2cm,           % Нижнє поле
+    left=2.5cm,           % Ліве поле
+    right=1cm,            % Праве поле
+    marginparwidth=1.75cm,% Ширина поля для приміток
+    headsep=1.25cm,       % Відстань між верхнім колонтитулом і текстом
+    footskip=1.25cm       % Відстань між нижнім колонтитулом і текстом
+]{geometry}
+
+% --- ДОДАТКОВІ ПАКЕТИ ---
+\usepackage{tcolorbox}
+\usepackage{amsmath}   % Розширені можливості для математичних формул
+\usepackage{graphicx}  % Для додавання зображень (\includegraphics)
+\usepackage{listings}  % Для форматування та вставки блоків коду
+\usepackage{xcolor}    % Дозволяє визначати та використовувати кольори
+\usepackage{enumitem}  % Гнучкі налаштування списків (itemize, enumerate)
+\usepackage[colorlinks=true, allcolors=blue]{hyperref} % Робить посилання (зміст, URL) клікабельними та синіми
+
+%Глобальні налаштування для блоків коду (пакет listings)
+\lstset{
+    language=Python,                 % Мова за замовчуванням
+    basicstyle=\ttfamily\small,      % Шрифт коду (моноширинний, малий)
+    keywordstyle=\color{blue}\bfseries, % Стиль ключових слів (синій, жирний)
+    stringstyle=\color{green!70!black},      % Стиль рядків (помаранчевий)
+    commentstyle=\color{gray}\itshape, % Стиль коментарів у коді (сірий, курсив)
+    numbers=left,                    % Нумерація рядків зліва
+    numberstyle=\tiny\color{gray},   % Стиль номерів рядків (дуже малий, сірий)
+    stepnumber=1,                    % Нумерувати кожен рядок
+    numbersep=5pt,                   % Відстань від номера до коду
+    backgroundcolor=\color{black!5}, % Світло-сірий фон
+    showstringspaces=false,          % Не показувати спеціальні символи для пробілів у рядках
+    tabsize=4,                       % Розмір табуляції (4 пробіли)
+    captionpos=b                     % Позиція підпису (b = bottom, знизу)
+}
+
+% Визначаємо кольори, схожі на ваш скріншот
+\definecolor{codeText}{HTML}{CC7832}  % Оранжевий текст
+\definecolor{softBg}{HTML}{F5F5F5}    % Світло-сірий фон
+
+% Створюємо команду \code
+\newtcbox{\code}{on line, 
+  boxrule=0pt,       % Без рамки
+  colback=softBg,  % Колір фону
+  coltext=codeText,  % Колір тексту
+  arc=2pt,           % Радіус закруглення кутів
+  boxsep=0pt,        % Відступ від рамки (зовнішній)
+  left=3pt, right=3pt, top=2pt, bottom=2pt, % Внутрішні відступи
+  fontupper=\ttfamily % Моноширинний шрифт
+}
+
+% Команда для форматування \section* (ненумерованої секції)
+\titleformat{name=\section, numberless} % Ціль: \section*
+  {\normalfont\normalsize\bfseries}     % Формат (звичайний, 14pt, жирний)
+  {}                                    % Немає "мітки" (номера)
+  {0em}                                 % Без відступу між міткою і текстом
+  {}                                    % ВІДСТУП
+
+% Параметри для нумерованих секцій
+\titleformat{\section}
+  {\normalfont\normalsize\bfseries}   % Формат
+  {\thesection}                       % Мітка (номер + крапка)
+  {0.4em}                                % Відступ між міткою і текстом
+  {}
+
+% Команда для форматування \section (нумерованої секції)
+\titlespacing{\section}{1.25cm}{12pt}{12pt}
+                                  
+\title{ Лабораторна робота №5}
+\author{Жук Дмитро РА-241}
+
+\begin{document}
+\onehalfspacing
+\date{}   % порожня дата 
+\maketitle
+
+\textbf{Тема:} Робота з файлами, зчитування/запис, обробка винятків для стабільності програм.
+
+\textbf{Мета:} Ознайомитися з методами роботи з файлами в Python, включаючи відкривання, зчитування, запис та коректне закриття файлів у текстовому й бінарному режимах. Навчитися використовувати менеджер контексту \code{with}, обробляти винятки \code{try-except-finally}, \code{try-except-else} під час файлових операцій, а також застосовувати механізми обробки помилок для забезпечення стабільності та відмовостійкості програм при роботі з зовнішніми ресурсами.
+
+\section*{Хід роботи}
+
+Розглянемо детально всі місця, де програма взаємодіє з файлами, зчитує/записує дані та захищає себе за допомогою винятків.
+
+\section{Зчитування конфігураційного JSON-файлу}
+
+Програма дозволяє користувачеві завантажити конфігурацію графіків із JSON-файлу. 
+
+\begin{lstlisting}
+def load_config(self):
+    path = filedialog.askopenfilename(filetypes=[("JSON Files",
+    "*.json")])
+    if not path:
+        return
+    with open(path, 'r') as f:
+        self.config_data = json.load(f)
+    self.setup_plots()
+\end{lstlisting}
+
+\begin{itemize}
+    \item \code{filedialog.askopenfilename(...)} — відкриває стандартне системне вікно вибору файлу, користувач сам обирає шлях.
+    \item \code{if not path: return} — якщо користувач натиснув «Скасувати», функція тихо завершується, нічого не ламається.
+    \item \code{with open(path, 'r') as f:} — безпечне відкриття файлу. Контекстний менеджер \code{with} гарантує, що файл завжди буде закритий, навіть якщо станеться помилка.
+    \item \code{json.load(f)} — зчитує весь файл і перетворює його в Python-об’єкт (словник зі списками).
+    \item Після успішного зчитування викликається \code{self.setup\_plots()} для перебудови графіків.
+\end{itemize}
+
+\vspace{1em}
+
+\textbf{Тут немає явного блоку} \code{try-except}\textbf{, тому що:}
+\begin{itemize}
+    \item \code{filedialog} — вже захищений від неправильних шляхів.
+    \item \code{with open} + \code{json.load} — у реальних умовах може викинути \\ \code{FileNotFoundError}, \code{PermissionError} або 
+    \code{json.JSONDecodeError}, але в цій програмі автор свідомо покладається на те, що користувач обирає існуючий валідний файл. Це прийнятно для десктопної утиліти.
+\end{itemize}
+
+\section{Обробка винятків при імпорті бібліотеки \texttt{serial}}
+
+\textbf{Приклад захисного програмування:}
+
+\begin{lstlisting}
+try:
+    import serial
+    import serial.tools.list_ports
+    UART_AVAILABLE = True
+except ImportError:
+    UART_AVAILABLE = False
+\end{lstlisting}
+
+\begin{itemize}
+    \item Якщо бібліотека \code{pyserial} не встановлена — програма не впаде при запуску.
+    \item Замість цього встановлюється глобальний флаг \code{UART\_AVAILABLE = False}.
+    \item Далі цей флаг використовується в кількох місцях наприклад, у \code{refresh\_ports}, і програма автоматично переходить у dummy-режим. Користувач навіть не помітить відсутності бібліотеки — просто працюватиме симуляція.
+\end{itemize}
+
+\section{Обробка винятків при відкритті COM-порту}
+
+\begin{lstlisting}
+def run(self):
+    self.running = True
+    if self.dummy:
+        self._run_dummy()
+    else:
+        try:
+            self.ser = serial.Serial(self.port, self.baudrate, 
+timeout=1)
+            self._run_uart()
+        except Exception as e:
+            print(f"UART open error: {e}")
+            self.running = False
+\end{lstlisting}
+
+\begin{itemize}
+    \item Якщо порт зайнятий, не існує, немає прав доступу — виняток ловиться.
+    \item Виводиться зрозуміле повідомлення в консоль.
+    \item Потік коректно завершується \code{self.running = False}, GUI не зависає.
+\end{itemize}
+
+\section{Перетворення baud rate — захист від некоректного вводу користувача}
+
+\begin{lstlisting}
+def start_reader(self):
+    if self.reader and self.reader.running:
+        return
+    try:
+        baud = int(self.baud_var.get())
+    except ValueError:
+        messagebox.showerror("Error", "Invalid baud rate")
+        return
+\end{lstlisting}
+
+\begin{itemize}
+    \item Користувач може ввести літери замість цифр.
+    \item \code{int()} викине \code{ValueError} → ловимо, показуємо вікно з помилкою і не запускаємо потік.
+    \item Програма залишається повністю працездатною.
+\end{itemize}
+
+\vspace{2em}
+
+\section{Безпечне закриття програми}
+
+\textbf{Метод} \code{on\_close}\textbf{:}
+
+\begin{lstlisting}
+def on_close(self):
+    self._closing = True                                      # 1
+    if getattr(self, "_after_id", None):                      # 2
+        try:
+            self.root.after_cancel(self._after_id)
+        except Exception:
+            pass
+
+    if self.reader:                                           # 3
+        try:
+            self.reader.stop()
+            self.reader.join(timeout=2)
+        except Exception:
+            pass
+
+    try:                                                      # 4
+        self.root.quit()
+    except Exception:
+        pass
+    try:
+        self.root.destroy()
+    except Exception:
+        pass
+\end{lstlisting}
+
+\begin{itemize}
+    \item Встановлюється флаг \code{\_closing = True} — метод \code{update\_plot} відразу припиняє планувати нові оновлення.
+    \item Скасовується запланований \code{after(100, self.update\_plot)} — запобігає виклику після знищення вікна.
+    \item Зупиняється і чекається завершення потоку читання \texttt{UART} — без цього може бути «зависле» вікно.
+    \item \code{quit()} і \code{destroy()} обгорнуті в окремі \code{try-except}, бо в деяких ситуаціях (наприклад, коли Tkinter вже частково знищений) вони можуть кидати винятки.
+\end{itemize}
+
+\vspace{1em}
+
+\section{Захист у циклі оновлення графіку}
+
+\begin{lstlisting}
+def update_plot(self):
+    if getattr(self, "_closing", False):
+        return
+
+    # ... updating schedules ...
+
+    try:
+        self.canvas.draw()
+    except tk.TclError:
+        return
+
+    try:
+        self._after_id = self.root.after(100, self.update_plot)
+    except tk.TclError:
+        self._after_id = None
+\end{lstlisting}
+
+\begin{itemize}
+    \item Якщо користувач закрив вікно — \code{canvas.draw()} або \code{root.after} викличуть \code{TclError}.
+    \item Ловимо їх і просто виходимо — без крашу всієї програми.
+\end{itemize}
+
+\section{Додаткові дрібні, але важливі захисти}
+
+\begin{lstlisting}
+if ports:
+    self.port_var.set(ports[0])
+\end{lstlisting}
+
+— тільки якщо список портів не порожній.
+
+\begin{lstlisting}
+n_subplots = len(subplots_cfg) or 1
+\end{lstlisting}
+
+— гарантія, що завжди буде хоча б один графік.
+
+\begin{lstlisting}
+if subplot_idx < 0:
+    subplot_idx = 0
+if subplot_idx >= len(self.subplots):
+    subplot_idx = len(self.subplots) - 1
+\end{lstlisting}
+
+— захист від некоректних індексів у JSON-конфігурації.
+
+\vspace{1em}
+
+\section*{Висновок}
+
+У ході виконання лабораторної роботи, оформленої за допомогою системи \LaTeX, я закріпив навички роботи з файлами в Python, зокрема відкривання, зчитування та запис у різних режимах. Також було опрацьовано використання конструкцій \code{with}, \code{try-except} та інших механізмів обробки винятків, що забезпечують стабільність програм при роботі з зовнішніми ресурсами. Аналіз програми показав, як коректно обробляти помилки під час завантаження файлів, взаємодії з COM-портами та завершення роботи застосунку.
+
+\end{document}
